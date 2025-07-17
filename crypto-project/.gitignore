@@ -1,0 +1,6 @@
+# Databases
+*.duckdb
+
+# .env venv
+.env
+venv/
