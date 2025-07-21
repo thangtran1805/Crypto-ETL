@@ -67,3 +67,54 @@ This file tracks all changes to the data warehouse schema over time.
 
 - Add `fact_ath_atl` table (tracking all-time high/low values)
 - Add `dim_exchange` if exchange data is ingested
+
+
+# 🧾 TABLE CHANGELOG — CRYPTO ETL PROJECT
+
+This file records all schema changes and DAG-related updates in the data warehouse.
+
+---
+
+## 📅 Date: 2025-07-20
+### 🔁 Affected DAG: `etl_to_datawarehouse`
+
+### ✅ Tables Updated
+#### 1. `dim_coin`
+- **Change**: Added `UNIQUE(coin_symbol, coin_name)`
+- **Reason**: To prevent duplicate coin info due to inconsistent API results
+- **DAG Impact**: DAG task `load_dim_coin` now checks for existing entries before insert.
+
+#### 2. `dim_time`
+- **Change**: Added `UNIQUE(date)`
+- **Reason**: Time dimension was producing duplicate rows on each DAG run.
+- **DAG Impact**: `load_dim_time` will now use `MERGE`-like logic to upsert.
+
+#### 3. `fact_price`
+- **Change**: Added `FOREIGN KEY (coin_id) → dim_coin`, `FOREIGN KEY (time_id) → dim_time`
+- **Reason**: Ensure referential integrity between dim and fact
+- **DAG Impact**: `transform_price_task` will only process data if dim data exists.
+
+---
+
+## 📅 Date: 2025-07-16
+### 🧱 New Tables Created
+#### 1. `fact_market_cap`
+- Columns: `coin_id`, `time_id`, `market_cap`, `market_cap_rank`, ...
+- Linked to: `dim_coin`, `dim_time`
+
+#### 2. `fact_supply`
+- Columns: `coin_id`, `time_id`, `circulating_supply`, `max_supply`, ...
+- Linked to: `dim_coin`, `dim_time`
+
+---
+
+## ⚠️ DAG & Validation Notes
+- All DAGs now include a **data quality check** step to verify:
+  - No NULL values in `coin_id` / `time_id` in fact tables
+  - No duplicates in `dim_coin`, `dim_time`
+- Added a DAG sensor to wait for latest Parquet before loading fact tables.
+
+## 🗂️ Check Airflow schedule
+
+![Airflow UI](./crypto-project/assets/image/airflow.png)
+
