@@ -14,7 +14,7 @@ This project implements a full ETL pipeline to collect, process, and load crypto
 
 ## 🗂️ Project Structure
 
-![Stucture Diagram](./assets/image/schema.png)
+![Stucture Diagram](/home/thangtranquoc/crypto-etl-project/crypto-project/assets/image/schema.png)
 
 ## 🚀 Setup
 
