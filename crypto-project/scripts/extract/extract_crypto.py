@@ -29,4 +29,4 @@ def crawl_cryto():
         outfile.write(json_object)
 
     print(f'Saving to {path}')
-# crawl_cryto()
+crawl_cryto()

@@ -6,7 +6,8 @@ CREATE SEQUENCE coin_id_seq;
 CREATE TABLE IF NOT EXISTS dim_coin (
     coin_id INTEGER DEFAULT NEXTVAL('coin_id_seq') PRIMARY KEY,
     coin_symbol TEXT,
-    coin_name TEXT
+    coin_name TEXT,
+    UNIQUE (coin_symbol,coin_name)
 );
 
 
@@ -17,7 +18,8 @@ CREATE TABLE IF NOT EXISTS dim_time (
     year INTEGER,
     month VARCHAR(10),
     quarter VARCHAR(10),
-    day_of_week VARCHAR (10)
+    day_of_week VARCHAR (10),
+    UNIQUE (date)
 );
 
 --fact_price
